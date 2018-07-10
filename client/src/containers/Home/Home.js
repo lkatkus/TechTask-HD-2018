@@ -28,8 +28,8 @@ class Home extends Component{
         event.preventDefault();
 
         let formData = {
-            username: event.target.username.value,
-            password: event.target.password.value,
+            username: event.target.username.value.trim(),
+            password: event.target.password.value.trim(),
         };
 
         axios.post('http://localhost:8000/user/login', formData)
@@ -52,9 +52,9 @@ class Home extends Component{
         event.preventDefault();
 
         let formData = {
-            username: event.target.username.value,
-            email: event.target.email.value,
-            password: event.target.password.value
+            username: event.target.username.value.trim(),
+            email: event.target.email.value.trim(),
+            password: event.target.password.value.trim()
         };
 
         axios.post('http://localhost:8000/user', formData)
@@ -71,10 +71,10 @@ class Home extends Component{
 
     displayFormHandler = () => {
         if(!this.props.user.auth){
-            return <Form type={this.props.status} onLogin={this.loginHandler} onLogout={this.logoutHandler} onCreateUser={this.createUserHandler}/>;
+            return <Form style={{backgroundColor:'blue'}} type={this.props.status} onLogin={this.loginHandler} onLogout={this.logoutHandler} onCreateUser={this.createUserHandler}/>;
         }else{
             return <Reminders id={this.props.user.id}/>
-        };
+        }
     };
 
     render(){

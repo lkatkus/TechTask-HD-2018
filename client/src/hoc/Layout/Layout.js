@@ -10,7 +10,7 @@ import './Layout.css'
 const layout = (props) => {
     return(
             <div className="mainContainer">
-                {props.children}
+                    {props.children}
             </div>
     );
 };

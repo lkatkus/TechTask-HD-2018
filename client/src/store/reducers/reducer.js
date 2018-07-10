@@ -27,9 +27,9 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 reminders: action.reminders
             }
-    };
-
-    return state;
+        default:
+            return state;
+    }
 };
 
 export default reducer;

@@ -157,13 +157,51 @@ const generateUserId = (hashedPassword) => {
     });
 
     // Update reminder
-    app.patch('/user/:userId/reminder', authenticate, (req, res) => {
-        res.send('update reminder');
+    app.patch('/user/:userId/reminder/:reminderId', authenticate, (req, res) => {
+        Reminder.findOneAndUpdate({
+            _id: req.params.reminderId,
+            creator: req.params.userId           
+        }, { $set: {text: req.body.text}})
+        .then((reminder) => {
+            if(reminder){
+                // Get all reminders after updating
+                return Reminder.find({
+                    creator: req.params.userId
+                })                
+            }else{
+                throw new Error('Unable to update reminder.');
+            }
+        })
+        .then((reminders) => {
+            res.status(200).send(reminders);
+        })
+        .catch((err) => {
+            res.status(400).send(err.message);
+        })        
     });
 
     // Delete reminder
     app.delete('/user/:userId/reminder/:reminderId', authenticate, (req, res) => {
-        res.send('update reminder');
+        Reminder.findOneAndRemove({
+            _id: req.params.reminderId,
+            creator: req.params.userId
+        })
+        .then((reminder) => {
+            if(reminder){
+                // Get all remaining reminders
+                return Reminder.find({
+                    creator: req.params.userId
+                })                
+            }else{
+                throw new Error('Unable to delete reminder.');
+            }
+        })
+        .then((reminders) => {
+            res.status(200).send(reminders);
+        })
+        .catch((err) => {
+            res.status(400).send(err.message);
+        })
     });
 
     // Send email

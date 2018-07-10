@@ -14,7 +14,7 @@ const generateToken = (user) => {
 }
 
 const authenticate = (req, res, next) => {
-    let token = req.headers.authtoken;  
+    let token = req.headers.authtoken;
     if(token){
         jwt.verify(token, salt, (err, decoded) => {
             if(decoded.id === Number(req.params.userId)){

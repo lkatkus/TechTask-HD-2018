@@ -1,0 +1,14 @@
+.reminderContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-flow: row;
+}
+
+.reminderContainer .deleteBtn{
+    background-color: red;
+}
+
+.reminderContainer .updateBtn{
+    background-color: green;
+}
