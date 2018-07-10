@@ -1,49 +1,24 @@
+// Dependency imports
 import React from 'react';
 
+// Asset imports
+import './Input.css';
+
+// Component
 const input = (props) => {
-    let inputElement = null;
 
     switch(props.elementType){
         case('Username'):
-            inputElement = (
-                <React.Fragment>
-                    <label>{props.elementType}</label>
-                    <input type="text" placeholder="Username" name="username"/>
-                </React.Fragment>
-            );
-            break;
-
+            return <input type="text" placeholder="Username" name="username" required/>
         case('Password'):
-            inputElement = (
-                <React.Fragment>
-                    <label>{props.elementType}</label>
-                    <input type="password" placeholder="Password" name="password"/>
-                </React.Fragment>
-            );
-            break;
-        
+            return <input type="password" placeholder="Password" name="password" required/>;
         case('Email'):
-            inputElement = (
-                <React.Fragment>
-                    <label>{props.elementType}</label>
-                    <input type="email" placeholder="Email" name="email"/>
-                </React.Fragment>
-            );
-            break;            
-
+            return <input type="email" placeholder="Email" name="email"/>;
         case('Submit'):
-            inputElement = <input type="submit" value="Submit"/>;
-            break;
-        
+            return <input type="submit" value="Submit"/>;
         default:
-            inputElement = null;
+            return null;
     }
-
-    return(
-        <div>
-            {inputElement}
-        </div>
-    );
 };
 
 export default input;

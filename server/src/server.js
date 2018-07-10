@@ -30,53 +30,63 @@ app.get('/', (req, res) => {
     // Redirect to reminder list if pass
 });
 
-let id = 1;
-
-const generateUserId = () => {
-    return id;
+const generateUserId = (hashedPassword) => {
+    return new Promise((resolve, reject) => {   
+        User.find().sort({id:-1}).limit(1)
+        .then((user) => {
+            if(user.length !== 0){
+                resolve({
+                    hashedPassword,
+                    id: user[0].id + 1
+                });
+            }else{
+                resolve({
+                    hashedPassword,
+                    id: 1
+                });
+            }
+        })
+        .catch((err) => {
+            reject('Unable to connect to database.');
+        })
+    })
 };
 
 // --- USER ---
     // Create user
-    app.post('/user', async (req, res) => {
-
+    app.post('/user', (req, res) => {
         let newUser = {};
-        
-        id++;
 
         User.findOne({name: req.body.username})
         .then((user) => {
             if(!user){
                 return hashPassword(req.body.password)
             }else{
-                // res.send({error: 'Username already in use.'});
                 throw new Error('Username already in use.');
             }
         })
         .then((hashedPassword) => {
-            console.log('new user')
+            return generateUserId(hashedPassword)
+        })
+        .then((userData) => {
             newUser = new User({
-                id: generateUserId(),
+                id: userData.id,
                 name: req.body.username,
                 email: req.body.email,
-                password: hashedPassword
+                password: userData.hashedPassword
             });
-
             newUser.save();
         })
         .then(() => {
-            console.log('NEW USER CREATED');
             res.status(200).send();
         })
         .catch((err) => {
-            console.log(err.message);
             res.status(400).send(err.message);
         })
     });
     
     // Login
     app.post('/user/login', (req, res) => {
-        
         User.findOne({name: req.body.username})
         .then((user) => {
             if(user){
@@ -88,19 +98,14 @@ const generateUserId = () => {
         .then((user) => {
             res.status(200).send({
                 id: user.id,
+                name: user.name,
                 token: generateToken(user)
             });
         })
         .catch((err) => {
-            res.status(401).send(err.toString());
+            res.status(401).send(err.message);
         })
-        
     });
-
-    // Logout
-    app.post('/user/logout', authenticate, (req, res) => {
-        res.send('user logout route');
-    });    
 
 // --- REMINDER ---
     // Create reminder

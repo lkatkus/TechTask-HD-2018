@@ -2,64 +2,27 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 // Component imports
 import Reminders from '../Reminders/Reminders';
 import Form from '../../components/Form/Form';
+import * as actions from '../../store/actions/actions';
 
 // Asset imports
 
 // Component
 class Home extends Component{
-    state = {
-        user: {
-            auth: false,
-        },
-        error: false
-    };
 
     componentWillMount(){
         // Check if user is logged in
         if(localStorage.getItem('authToken')){
-            this.setState({
-                user: {
-                    auth: true,
-                }
-            });
+            this.props.authAdd();
         }else{
-            this.setState({
-                user: {
-                    auth: false,
-                }
-            });
+            this.props.authRemove();
         }
-        
+    };
 
-        if(this.props.status === 'signup'){
-            // console.log('ROUTE signup');
-        }else{
-            // console.log('ROUTE login');
-        }
-    }
-
-    componentWillUpdate(){
-        // console.log('componentWillUpdate');
-        if(this.props.status === 'signup'){
-            // console.log('ROUTE signup');
-        }else{
-            // console.log('ROUTE login');
-        }
-
-        if(localStorage.getItem('authToken')){
-            // console.log('User is logged in');
-        }else{
-            // console.log('User is not logged in');
-        }
-    }
-
-    componentDidUpdate(){
-        // console.log('componentDidUpdate');
-    }
 
     loginHandler = (event) => {
         event.preventDefault();
@@ -74,26 +37,14 @@ class Home extends Component{
             if(res.data.token){
                 localStorage.setItem('authToken', res.data.token);
                 localStorage.setItem('authUserId', res.data.id);
-                this.setState({
-                    user: {
-                        auth: true,
-                    }
-                });
+                localStorage.setItem('userName', res.data.name);
+                this.props.authAdd();
             }else{
                 throw new Error(res.data);
             }
         })
         .catch((err) => {
-            console.log(err);
-        });
-    };
-
-    logoutHandler = () => {
-        localStorage.removeItem('authToken');
-        this.setState({
-            user: {
-                auth: false
-            }
+            console.log(err.response.data);
         });
     };
 
@@ -111,31 +62,42 @@ class Home extends Component{
             if(res.data.error){
                 throw new Error(res.data.error);
             }
-            console.log('redir');
             this.props.history.push('/');
         })
         .catch((err) => {
-            console.log('CATCH');
-            console.log(err);
+            console.log(err.response.data);
         });
-    }
+    };
 
     displayFormHandler = () => {
-        if(!this.state.user.auth){
+        if(!this.props.user.auth){
             return <Form type={this.props.status} onLogin={this.loginHandler} onLogout={this.logoutHandler} onCreateUser={this.createUserHandler}/>;
         }else{
-            return <Reminders id={this.state.user.id}/>
-        }
-    }
+            return <Reminders id={this.props.user.id}/>
+        };
+    };
 
     render(){
         return(
             <React.Fragment>
-                <button onClick={this.logoutHandler}>Logout</button>
                 {this.displayFormHandler()}
             </React.Fragment>
         )
     };
+};
+
+const mapStateToProps = state => {
+    return{
+        user: state.user,
+        error: state.error
+    }
 }
 
-export default withRouter(Home);
+const mapDispatchToProps = dispatch => {
+    return{
+        authAdd: () => dispatch(actions.authAdd()),
+        authRemove: () => dispatch(actions.authRemove())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Home));

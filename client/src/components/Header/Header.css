@@ -1,0 +1,28 @@
+.HeaderContainer{
+    background-color: #d3d3d3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+
+.HeaderContainer nav div{
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: salmon;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.HeaderContainer div{
+    display: inline-block;
+    padding: 10px;
+}
+
+.HeaderContainer nav div:hover{
+    background-color: red;
+}

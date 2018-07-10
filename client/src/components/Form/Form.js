@@ -1,36 +1,22 @@
+// Dependency imports
 import React from 'react';
 
-import Input from './Input/Input';
+// Component imports
+import FormLogin from './FormLogin/FormLogin';
+import FormSignup from './FormSignup/FormSignup';
 
+// Asset imports
+import './Form.css';
+
+// Component
 const form = (props) => {
     switch(props.type){
         case('login'):
-            return (
-                <React.Fragment>
-                    <div>
-                        <form onSubmit={props.onLogin}>
-                            <Input elementType="Username"/>
-                            <Input elementType="Password"/>
-                            <Input elementType="Submit"/>
-                        </form>
-                    </div>
-                </React.Fragment>
-            );
+            return <FormLogin {...props}/>;
         case('signup'):
-            return (
-                <React.Fragment>
-                    <div>
-                        <form onSubmit={props.onCreateUser}>
-                            <Input elementType="Username"/>
-                            <Input elementType="Password"/>
-                            <Input elementType="Email"/>
-                            <Input elementType="Submit"/>
-                        </form>
-                    </div>
-                </React.Fragment>
-            );
+            return <FormSignup {...props}/>;
         default:
-            return null;
+            return <FormSignup {...props}/>;
     }
 };
 

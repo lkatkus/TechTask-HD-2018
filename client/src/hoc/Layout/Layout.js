@@ -2,18 +2,16 @@
 import React from 'react';
 
 // Component imports
-import Header from '../../components/Header/Header';
 
 // Asset imports
-
+import './Layout.css'
 
 // Component
 const layout = (props) => {
     return(
-        <React.Fragment>
-            <Header/>
-            {props.children}
-        </React.Fragment>
+            <div className="mainContainer">
+                {props.children}
+            </div>
     );
 };
 

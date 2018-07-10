@@ -10,6 +10,7 @@ import Reminders from './containers/Reminders/Reminders';
 // Asset imports
 
 class App extends Component {
+
     render() {
         return (
             <Layout>
