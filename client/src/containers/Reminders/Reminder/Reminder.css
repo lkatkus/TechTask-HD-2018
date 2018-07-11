@@ -3,12 +3,39 @@
     align-items: center;
     justify-content: space-between;
     flex-flow: row;
+    border: 1px solid white;
+    margin-bottom: 10px;
+    padding: 10px;
 }
 
-.reminderContainer .deleteBtn{
+.reminderTitle{
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.reminderText{
+}
+
+.button{
+    cursor: pointer;
+    padding: 10px;
+    display: inline-block;
+}
+
+.update{
+    background-color: green;
+}
+
+.delete{
     background-color: red;
 }
 
-.reminderContainer .updateBtn{
-    background-color: green;
+.send{
+    background-color: orange;
+}
+
+@media(min-width:500px){
+    .contentContainer{
+        width: 30%;
+    }
 }

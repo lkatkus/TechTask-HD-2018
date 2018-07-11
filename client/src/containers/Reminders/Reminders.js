@@ -5,17 +5,18 @@ import {connect} from 'react-redux';
 
 // Component imports
 import Reminder from './Reminder/Reminder';
-import ReminderUpdateForm from '../../components/Form/FormUpdateReminder/FormUpdateReminder';
-import Header from '../../components/Header/Header';
-import AddReminderControls from './AddReminder/AddReminder';
+import Form from '../../components/Form/Form';
+import Header from './Header/Header';
+import Button from '../../components/UI/Button/Button';
 import * as actions from '../../store/actions/actions';
 
 // Component
 class Reminders extends Component {
 
     state = {
-        updateReminder: false,
-        updatedReminder: null
+        updatingReminder: false,
+        addingReminder: false,
+        currentReminder: {}
     }
 
     componentDidMount(){
@@ -33,28 +34,39 @@ class Reminders extends Component {
 
     showReminders = () => {
         if(this.props.reminders){
-            return this.props.reminders.map((reminder) => {
-                return(
-                    <Reminder
-                        {...reminder}
-                        key={reminder._id}
-                        removeReminder={this.removeReminder}
-                        startUpdating={this.startUpdating}
-                    />
-                )
-            })
+            return(
+                this.props.reminders.map((reminder) => {
+                    return(
+                        <Reminder
+                            {...reminder}
+                            key={reminder._id}
+                            removeReminder={this.removeReminder}
+                            updateReminder={this.displayReminderUpdateForm}
+                            sendReminder={this.sendReminder}
+                        />
+                    )
+                })
+            )
         }
         return <p>Loading...</p>
     }
 
-    showUpdateForm = () => {
-        if(this.state.updateReminder){
+    showReminderForm = () => {
+        if(this.state.updatingReminder){
             return(
-                <ReminderUpdateForm
-                    {...this.state.updatedReminder}
-                    cancelUpdate={this.cancelUpdate}
+                <Form
+                    type='updateReminder'
+                    {...this.state.currentReminder}
                     updateReminder={this.updateReminder}
-                    changed={this.inputChangeHandler}
+                    cancelForm={this.cancelForm}
+                />
+            )
+        }else if(this.state.addingReminder){
+            return(
+                <Form
+                    type='addReminder'
+                    addNewReminder={this.addNewReminder}
+                    cancelForm={this.cancelForm}
                 />
             )
         }else{
@@ -62,27 +74,28 @@ class Reminders extends Component {
         }
     };
 
-    inputChangeHandler = (event) =>{
-        let newReminder = {...this.state.updatedReminder}
-        newReminder.text = event.target.value
+    displayAddReminderForm = () => {
         this.setState({
-            updatedReminder: newReminder
-        })
-    }
+            addingReminder: true        
+        }) 
+    };
 
-    startUpdating = (updatedReminder) => {
+    displayReminderUpdateForm = (updatedReminder) => {
         this.setState({
-            updateReminder: true,
+            updatingReminder: true,
             updatedReminder: {
                 id: updatedReminder._id,
+                title: updatedReminder.title,
                 text: updatedReminder.text
             }            
         }) 
     };
 
-    cancelUpdate = () => {
+
+    cancelForm = () => {
         this.setState({
-            updateReminder: false,
+            updatingReminder: false,
+            addingReminder: false,
             updatedReminder: null            
         })
     };
@@ -93,7 +106,12 @@ class Reminders extends Component {
         let userId = localStorage.getItem('authUserId');
         let userToken = localStorage.getItem('authToken');
 
-        axios.post(`http://localhost:8000/user/${userId}/reminder`, {text: event.target.reminderText.value.trim()}, {'headers': {authToken: userToken}})
+        let newReminder = {
+            title: event.target.title.value.trim(),
+            text: event.target.text.value.trim()
+        }
+
+        axios.post(`http://localhost:8000/user/${userId}/reminder`, newReminder, {'headers': {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
         })
@@ -124,25 +142,34 @@ class Reminders extends Component {
         axios.patch(`http://localhost:8000/user/${userId}/reminder/${this.state.updatedReminder.id}`, {text: this.state.updatedReminder.text}, {headers: {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
+            this.setState({
+                updateReminder: false,
+                updatedReminder: null            
+            })
         })
         .catch((err) => {
             console.log(err.response.data);
         });        
     }
 
+    sendReminder = (reminder) => {
+        console.log('Sending reminder');
+    }
+
     render(){
         return(
             <React.Fragment>
+                
                 <Header/>
                 
-                <AddReminderControls addNewReminder={this.addReminder}/>
-                
-                <div>
+                <div className='contentContainer'>
                     <h3>Reminders:</h3>
                     {this.showReminders()}
+                    <Button label='Add New Reminder' clicked={this.displayAddReminderForm}/>
                 </div>
-                
-                {this.showUpdateForm()}
+
+                {this.showReminderForm()}
+
             </React.Fragment>
         );
     };

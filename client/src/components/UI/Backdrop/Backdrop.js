@@ -4,7 +4,7 @@ import './Backdrop.css';
 
 const backdrop = (props) => {
     return(
-        props.show ? <div className="Backdrop" onClick={props.cancelUpdate}></div> : null
+        props.show ? <div className="Backdrop" onClick={props.cancelForm}></div> : null
     )
 };
 

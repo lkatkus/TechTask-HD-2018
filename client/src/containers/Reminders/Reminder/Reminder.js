@@ -1,6 +1,9 @@
 // Dependency imports
 import React from 'react';
 
+// Component imports
+import Button from '../../../components/UI/Button/Button';
+
 // Asset imports
 import './Reminder.css';
 
@@ -9,13 +12,17 @@ const reminder = (props) => {
     return(
         <div className="reminderContainer">
             <div>
-                {props.text}
+                <div className="reminderTitle">
+                    {props.title}
+                </div>                
+                <div className="reminderText">
+                    {props.text}
+                </div>
             </div>
-            <div className="deleteBtn" onClick={() => props.removeReminder(props._id)}>
-                Delete
-            </div>
-            <div className="updateBtn" onClick={() => props.startUpdating(props)}>
-                Update
+            <div>
+                <Button label='Update' clicked={() => props.updateReminder(props)}/>
+                <Button label='Delete' clicked={() => props.removeReminder(props._id)}/>
+                <Button label='Send' clicked={() => props.sendReminder(props)}/>               
             </div>
         </div>
     )

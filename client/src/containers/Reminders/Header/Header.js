@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux'
 
 // Component imports
-import * as actions from '../../store/actions/actions';
+import * as actions from '../../../store/actions/actions';
 
 // Asset imports
 import './Header.css'

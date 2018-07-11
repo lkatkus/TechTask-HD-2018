@@ -9,9 +9,9 @@ import './Layout.css'
 // Component
 const layout = (props) => {
     return(
-            <div className="mainContainer">
-                    {props.children}
-            </div>
+        <div className="mainContainer">
+            {props.children}
+        </div>
     );
 };
 
