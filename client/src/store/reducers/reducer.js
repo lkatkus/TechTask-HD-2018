@@ -4,8 +4,7 @@ const initialState = {
     user: {
         auth: false
     },
-    reminders: [],
-    error: null
+    reminders: []
 }
 
 const reducer = (state = initialState, action) => {

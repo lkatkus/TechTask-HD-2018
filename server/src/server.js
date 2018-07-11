@@ -23,6 +23,8 @@
     app.use(bodyParser.json());
     app.use(cors());
     app.options('*', cors());
+
+    const PORT = process.env.PORT || 3000;
 // --------- END SETUP ---------
 
 // --------- ROUTING ---------
@@ -185,7 +187,7 @@
     });
 // --------- END ROUTING ---------
 
-app.listen('8000', () => {
-    console.log('Server on PORT 8000');
+app.listen(PORT, () => {
+    console.log(`Server up on ${PORT}`)
 });
 
