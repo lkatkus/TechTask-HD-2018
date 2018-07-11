@@ -11,7 +11,7 @@ import './Reminder.css';
 const reminder = (props) => {
     return(
         <div className='reminderContainer'>
-            <div>
+            <div className="reminderContent">
                 <div className='reminderTitle'>
                     {props.title}
                 </div>                
@@ -19,7 +19,7 @@ const reminder = (props) => {
                     {props.text}
                 </div>
             </div>
-            <div>
+            <div className="reminderButtons">
                 <Button small label='Update' clicked={() => props.updateReminder(props)}/>
                 <Button small label='Delete' clicked={() => props.removeReminder(props._id)}/>
                 <Button small label='Send' clicked={() => props.sendReminder(props)}/>               

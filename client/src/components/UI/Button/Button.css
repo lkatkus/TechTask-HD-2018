@@ -14,8 +14,13 @@
 }
 
 .small{
-    display: inline-block;
-    margin-left: 5px;
+    display: table;
+    height: 100%;
+}
+
+.small div{
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .big{

@@ -12,6 +12,7 @@ import * as actions from '../../store/actions/actions';
 
 // Asset imports
 import './Reminders.css';
+import {API_URL} from '../../config.js';
 
 // Component
 class Reminders extends Component {
@@ -26,7 +27,7 @@ class Reminders extends Component {
         let userId = localStorage.getItem('authUserId');
         let userToken = localStorage.getItem('authToken');
 
-        axios.get(`http://localhost:8000/user/${userId}/reminder`, {'headers': {authToken: userToken}})
+        axios.get(`${API_URL}/user/${userId}/reminder`, {'headers': {authToken: userToken}})
         .then((res) => {          
             this.props.addReminders(res.data);
         })
@@ -113,7 +114,7 @@ class Reminders extends Component {
             text: event.target.text.value.trim()
         };
 
-        axios.post(`http://localhost:8000/user/${userId}/reminder`, newReminder, {'headers': {authToken: userToken}})
+        axios.post(`${API_URL}/user/${userId}/reminder`, newReminder, {'headers': {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
             this.cancelForm();
@@ -127,7 +128,7 @@ class Reminders extends Component {
         let userId = localStorage.getItem('authUserId');
         let userToken = localStorage.getItem('authToken');
 
-        axios.delete(`http://localhost:8000/user/${userId}/reminder/${id}`, {headers: {authToken: userToken}})
+        axios.delete(`${API_URL}/user/${userId}/reminder/${id}`, {headers: {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
             this.cancelForm();
@@ -147,7 +148,7 @@ class Reminders extends Component {
             text: reminder.text
         };
         
-        axios.patch(`http://localhost:8000/user/${userId}/reminder/${reminder.id}`, updatedReminder, {headers: {authToken: userToken}})
+        axios.patch(`${API_URL}/user/${userId}/reminder/${reminder.id}`, updatedReminder, {headers: {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
             this.cancelForm();

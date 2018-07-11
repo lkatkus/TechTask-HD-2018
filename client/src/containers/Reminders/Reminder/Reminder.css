@@ -1,8 +1,7 @@
 .reminderContainer{
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    flex-flow: row;
+    flex-flow: column;
     border: 1px solid white;
     margin-bottom: 10px;
     padding: 10px;
@@ -11,4 +10,31 @@
 .reminderTitle{
     font-weight: bold;
     font-size: 1.2rem;
+}
+
+.reminderButtons{
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row;
+}
+
+.reminderButtons div{
+    width: 32%;
+}
+
+@media(min-width:500px){
+    .reminderContainer{
+        flex-flow: row;
+    }
+
+    .reminderButtons{
+        padding-top: unset;
+    }
+
+    .reminderButtons div{
+        width: unset;
+        margin-left: 10px;
+    }
+    
 }

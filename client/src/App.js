@@ -9,8 +9,6 @@ import Home from './containers/Home/Home';
 import Reminders from './containers/Reminders/Reminders';
 import * as actions from './store/actions/actions';
 
-// Asset imports
-
 // Component
 class App extends Component {
 

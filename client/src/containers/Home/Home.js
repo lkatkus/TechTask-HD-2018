@@ -10,6 +10,7 @@ import * as actions from '../../store/actions/actions';
 
 // Asset imports
 import './Home.css'
+import {API_URL} from '../../config.js';
 
 // Component
 class Home extends Component{
@@ -26,7 +27,7 @@ class Home extends Component{
             password: event.target.password.value.trim(),
         };
 
-        axios.post('http://localhost:8000/user/login', formData)
+        axios.post(`${API_URL}/user/login`, formData)
         .then((res) => {
             if(res.data.token){
                 localStorage.setItem('authToken', res.data.token);
@@ -58,7 +59,7 @@ class Home extends Component{
             password: event.target.password.value.trim()
         };
 
-        axios.post('http://localhost:8000/user', formData)
+        axios.post(`${API_URL}/user/`, formData)
         .then((res) => {
             if(res.data.error){
                 throw new Error(res.data.error);

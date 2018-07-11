@@ -17,7 +17,7 @@ const button = (props) => {
 
     return(
         <div className={styles.join(' ')} onClick={props.clicked}>
-            {props.label}
+            <div>{props.label}</div>
         </div>
     )
 };
