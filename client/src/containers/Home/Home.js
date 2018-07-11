@@ -5,24 +5,18 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 // Component imports
-import Reminders from '../Reminders/Reminders';
 import Form from '../../components/Form/Form';
 import * as actions from '../../store/actions/actions';
 
 // Asset imports
+import './Home.css'
 
 // Component
 class Home extends Component{
 
-    componentWillMount(){
-        // Check if user is logged in
-        if(localStorage.getItem('authToken')){
-            this.props.authAdd();
-        }else{
-            this.props.authRemove();
-        }
-    };
-
+    state = {
+        error: null
+    }
 
     loginHandler = (event) => {
         event.preventDefault();
@@ -39,12 +33,19 @@ class Home extends Component{
                 localStorage.setItem('authUserId', res.data.id);
                 localStorage.setItem('userName', res.data.name);
                 this.props.authAdd();
+                this.props.history.push('/reminders');
             }else{
                 throw new Error(res.data);
             }
         })
         .catch((err) => {
-            console.log(err.response.data);
+            let errorMessage;
+            if(err.response){
+                errorMessage = err.response.data;
+            }else{
+                errorMessage = err.message;
+            }
+            this.setState({ error: errorMessage });
         });
     };
 
@@ -65,23 +66,39 @@ class Home extends Component{
             this.props.history.push('/');
         })
         .catch((err) => {
-            console.log(err.response.data);
+            let errorMessage;
+            if(err.response){
+                errorMessage = err.response.data;
+            }else{
+                errorMessage = err.message;
+            }
+            this.setState({ error: errorMessage });
         });
     };
 
     displayFormHandler = () => {
-        if(!this.props.user.auth){
-            return <Form style={{backgroundColor:'blue'}} type={this.props.status} onLogin={this.loginHandler} onLogout={this.logoutHandler} onCreateUser={this.createUserHandler}/>;
-        }else{
-            return <Reminders id={this.props.user.id}/>
+        if(this.props.status === 'login'){
+            return <Form type='login' onLogin={this.loginHandler}/>;
+        }else if(this.props.status === 'signup'){
+            return <Form type='signup' onCreateUser={this.createUserHandler}/>;
         }
     };
 
+    showError = () => {
+        if(this.state.error){
+            return <div className="errorContainer">{this.state.error}</div>
+        }else{
+            return null;
+        }
+    }
+
     render(){
         return(
-            <React.Fragment>
+            <div className='contentContainer'>
+                <h1>RmbrApp</h1>
                 {this.displayFormHandler()}
-            </React.Fragment>
+                {this.showError()}
+            </div>
         )
     };
 };
@@ -100,4 +117,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Home));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

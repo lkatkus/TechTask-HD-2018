@@ -10,6 +10,9 @@ import Header from './Header/Header';
 import Button from '../../components/UI/Button/Button';
 import * as actions from '../../store/actions/actions';
 
+// Asset imports
+import './Reminders.css';
+
 // Component
 class Reminders extends Component {
 
@@ -17,7 +20,7 @@ class Reminders extends Component {
         updatingReminder: false,
         addingReminder: false,
         currentReminder: {}
-    }
+    };
 
     componentDidMount(){
         let userId = localStorage.getItem('authUserId');
@@ -49,7 +52,7 @@ class Reminders extends Component {
             )
         }
         return <p>Loading...</p>
-    }
+    };
 
     showReminderForm = () => {
         if(this.state.updatingReminder){
@@ -83,14 +86,13 @@ class Reminders extends Component {
     displayReminderUpdateForm = (updatedReminder) => {
         this.setState({
             updatingReminder: true,
-            updatedReminder: {
+            currentReminder: {
                 id: updatedReminder._id,
                 title: updatedReminder.title,
                 text: updatedReminder.text
             }            
-        }) 
+        });
     };
-
 
     cancelForm = () => {
         this.setState({
@@ -100,7 +102,7 @@ class Reminders extends Component {
         })
     };
 
-    addReminder = (event) => {
+    addNewReminder = (event) => {
         event.preventDefault();
 
         let userId = localStorage.getItem('authUserId');
@@ -109,11 +111,12 @@ class Reminders extends Component {
         let newReminder = {
             title: event.target.title.value.trim(),
             text: event.target.text.value.trim()
-        }
+        };
 
         axios.post(`http://localhost:8000/user/${userId}/reminder`, newReminder, {'headers': {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
+            this.cancelForm();
         })
         .catch((err) => {
             console.log('Unable to add a reminder');
@@ -127,34 +130,36 @@ class Reminders extends Component {
         axios.delete(`http://localhost:8000/user/${userId}/reminder/${id}`, {headers: {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
+            this.cancelForm();
         })
         .catch((err) => {
             console.log(err.response.data);
         });
-    }
+    };
 
-    updateReminder = (event) => {
-        event.preventDefault();
+    updateReminder = (reminder) => {
 
         let userId = localStorage.getItem('authUserId');
         let userToken = localStorage.getItem('authToken');
 
-        axios.patch(`http://localhost:8000/user/${userId}/reminder/${this.state.updatedReminder.id}`, {text: this.state.updatedReminder.text}, {headers: {authToken: userToken}})
+        let updatedReminder = {
+            title: reminder.title,
+            text: reminder.text
+        };
+        
+        axios.patch(`http://localhost:8000/user/${userId}/reminder/${reminder.id}`, updatedReminder, {headers: {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
-            this.setState({
-                updateReminder: false,
-                updatedReminder: null            
-            })
+            this.cancelForm();
         })
         .catch((err) => {
             console.log(err.response.data);
         });        
-    }
+    };
 
     sendReminder = (reminder) => {
         console.log('Sending reminder');
-    }
+    };
 
     render(){
         return(
@@ -163,9 +168,9 @@ class Reminders extends Component {
                 <Header/>
                 
                 <div className='contentContainer'>
-                    <h3>Reminders:</h3>
+                    <div className="contentContainerTitle">Do not forget to</div>
                     {this.showReminders()}
-                    <Button label='Add New Reminder' clicked={this.displayAddReminderForm}/>
+                    <Button big label='Add New Reminder' clicked={this.displayAddReminderForm}/>
                 </div>
 
                 {this.showReminderForm()}

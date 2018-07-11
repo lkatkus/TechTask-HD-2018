@@ -1,0 +1,14 @@
+h1{
+    color: white;
+    font-size: 4rem;
+    margin-bottom: 50px;
+    text-decoration: underline;
+}
+
+.errorContainer{
+    text-align: center;
+    padding: 30px;
+    color: white;
+    font-size: 2rem;
+    font-weight: 300;
+}

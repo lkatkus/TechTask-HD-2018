@@ -1,0 +1,22 @@
+.contentContainerTitle{
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    padding: 15px;
+}
+
+.contentContainer{
+    width: 80%;
+}
+
+.reminderContainer{
+    color: white;
+}
+
+@media(min-width:700px){
+    .contentContainer{
+        width: 50%;
+    }
+}

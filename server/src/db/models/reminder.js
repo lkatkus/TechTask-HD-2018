@@ -4,6 +4,9 @@ const Reminder = mongoose.model('Reminder', {
     creator: {
         type: String
     },
+    title: {
+        type: String
+    },
     text: {
         type: String
     },

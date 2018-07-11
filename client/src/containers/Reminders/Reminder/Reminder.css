@@ -12,30 +12,3 @@
     font-weight: bold;
     font-size: 1.2rem;
 }
-
-.reminderText{
-}
-
-.button{
-    cursor: pointer;
-    padding: 10px;
-    display: inline-block;
-}
-
-.update{
-    background-color: green;
-}
-
-.delete{
-    background-color: red;
-}
-
-.send{
-    background-color: orange;
-}
-
-@media(min-width:500px){
-    .contentContainer{
-        width: 30%;
-    }
-}

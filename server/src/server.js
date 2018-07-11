@@ -7,7 +7,9 @@
 
     // Custom modules
     const {generateToken, authenticate, hashPassword, checkPassword} = require('./middleware/auth');
-    
+    const {generateUserId} = require('./db/utils/generateUserId');
+    const {sendMail} = require('./utils/sendMail');
+
     // Database setup
     const {mongoose} = require('./db/mongoose');
     const {User} = require('./db/models/user');
@@ -24,34 +26,6 @@
 // --------- END SETUP ---------
 
 // --------- ROUTING ---------
-app.get('/', (req, res) => {
-    // Check if logged in
-    // Redirect to login page if failed
-    // Redirect to reminder list if pass
-});
-
-const generateUserId = (hashedPassword) => {
-    return new Promise((resolve, reject) => {   
-        User.find().sort({id:-1}).limit(1)
-        .then((user) => {
-            if(user.length !== 0){
-                resolve({
-                    hashedPassword,
-                    id: user[0].id + 1
-                });
-            }else{
-                resolve({
-                    hashedPassword,
-                    id: 1
-                });
-            }
-        })
-        .catch((err) => {
-            reject('Unable to connect to database.');
-        })
-    })
-};
-
 // --- USER ---
     // Create user
     app.post('/user', (req, res) => {
@@ -113,12 +87,14 @@ const generateUserId = (hashedPassword) => {
 
         let newReminder = new Reminder({
             creator: req.params.userId,
+            title: req.body.title,
             text: req.body.text,
             createdAt: new Date().getTime()
         });
 
         newReminder.save()
-        .then(() => {
+        .then((addedReminder) => {
+            // sendMail(addedReminder);
             return Reminder.find({
                 creator: req.params.userId
             })
@@ -148,7 +124,6 @@ const generateUserId = (hashedPassword) => {
                     return reminder.createdAt <= req.query.to;
                 });
             };
-
             res.status(200).send(reminders);
         })
         .catch((err) => {
@@ -161,7 +136,7 @@ const generateUserId = (hashedPassword) => {
         Reminder.findOneAndUpdate({
             _id: req.params.reminderId,
             creator: req.params.userId           
-        }, { $set: {text: req.body.text}})
+        }, { $set: {title: req.body.title, text: req.body.text}})
         .then((reminder) => {
             if(reminder){
                 // Get all reminders after updating

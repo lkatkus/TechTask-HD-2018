@@ -10,19 +10,19 @@ import './Reminder.css';
 // Component
 const reminder = (props) => {
     return(
-        <div className="reminderContainer">
+        <div className='reminderContainer'>
             <div>
-                <div className="reminderTitle">
+                <div className='reminderTitle'>
                     {props.title}
                 </div>                
-                <div className="reminderText">
+                <div className='reminderText'>
                     {props.text}
                 </div>
             </div>
             <div>
-                <Button label='Update' clicked={() => props.updateReminder(props)}/>
-                <Button label='Delete' clicked={() => props.removeReminder(props._id)}/>
-                <Button label='Send' clicked={() => props.sendReminder(props)}/>               
+                <Button small label='Update' clicked={() => props.updateReminder(props)}/>
+                <Button small label='Delete' clicked={() => props.removeReminder(props._id)}/>
+                <Button small label='Send' clicked={() => props.sendReminder(props)}/>               
             </div>
         </div>
     )
