@@ -13,7 +13,7 @@ const reminder = (props) => {
         <div className='reminderContainer'>
             <div className="reminderContent">
                 <div className='reminderTitle'>
-                    {props.title}
+                    {props.title} <span>({props.deadline})</span>
                 </div>                
                 <div className='reminderText'>
                     {props.text}
@@ -22,7 +22,7 @@ const reminder = (props) => {
             <div className="reminderButtons">
                 <Button small label='Update' clicked={() => props.updateReminder(props)}/>
                 <Button small label='Delete' clicked={() => props.removeReminder(props._id)}/>
-                <Button small label='Send' clicked={() => props.sendReminder(props)}/>               
+                <Button small label='Send' clicked={() => props.sendReminder(props._id)}/>               
             </div>
         </div>
     )

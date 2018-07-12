@@ -90,7 +90,8 @@ class Reminders extends Component {
             currentReminder: {
                 id: updatedReminder._id,
                 title: updatedReminder.title,
-                text: updatedReminder.text
+                text: updatedReminder.text,
+                deadline: updatedReminder.deadline
             }            
         });
     };
@@ -103,6 +104,21 @@ class Reminders extends Component {
         })
     };
 
+    getFilteredReminders = (event) => {
+        event.preventDefault();
+
+        let userId = localStorage.getItem('authUserId');
+        let userToken = localStorage.getItem('authToken');
+
+        axios.get(`${API_URL}/user/${userId}/reminder?to=${event.target.deadline.value}`, {'headers': {authToken: userToken}})
+        .then((res) => {          
+            this.props.addReminders(res.data);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
     addNewReminder = (event) => {
         event.preventDefault();
 
@@ -111,7 +127,8 @@ class Reminders extends Component {
 
         let newReminder = {
             title: event.target.title.value.trim(),
-            text: event.target.text.value.trim()
+            text: event.target.text.value.trim(),
+            deadline: event.target.deadline.value
         };
 
         axios.post(`${API_URL}/user/${userId}/reminder`, newReminder, {'headers': {authToken: userToken}})
@@ -124,11 +141,11 @@ class Reminders extends Component {
         });
     };
 
-    removeReminder = (id) => {
+    removeReminder = (reminderId) => {
         let userId = localStorage.getItem('authUserId');
         let userToken = localStorage.getItem('authToken');
 
-        axios.delete(`${API_URL}/user/${userId}/reminder/${id}`, {headers: {authToken: userToken}})
+        axios.delete(`${API_URL}/user/${userId}/reminder/${reminderId}`, {headers: {authToken: userToken}})
         .then((res) => {
             this.props.addReminders(res.data);
             this.cancelForm();
@@ -158,8 +175,17 @@ class Reminders extends Component {
         });        
     };
 
-    sendReminder = (reminder) => {
-        console.log('Sending reminder');
+    sendReminder = (reminderId) => {
+        let userId = localStorage.getItem('authUserId');
+        let userToken = localStorage.getItem('authToken');
+
+        axios.post(`${API_URL}/user/${userId}/reminder/${reminderId}/send`, null, {headers: {authToken: userToken}})
+        .then((res) => {
+            // Display confirmation message
+        })
+        .catch((err) => {
+            console.log(err.response.data);
+        });
     };
 
     render(){
@@ -169,6 +195,7 @@ class Reminders extends Component {
                 <Header/>
                 
                 <div className='contentContainer'>
+                    <Form type='filterReminders' filterReminder={this.getFilteredReminders}/>
                     <div className="contentContainerTitle">Do not forget to</div>
                     {this.showReminders()}
                     <Button big label='Add New Reminder' clicked={this.displayAddReminderForm}/>

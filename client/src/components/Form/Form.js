@@ -19,7 +19,8 @@ class Form extends Component{
             currentReminder: {
                 id: this.props.id,
                 title: this.props.title,
-                text: this.props.text
+                text: this.props.text,
+                deadline: this.props.deadline
             }
         });
     }
@@ -69,8 +70,12 @@ class Form extends Component{
                     <div className='reminderUpdateFormContainer'>
                         <Backdrop show cancelForm={this.props.cancelForm}/>
                         <form onSubmit={this.props.addNewReminder}>
-                            <input type="text" name="title" placeholder="Title" autoComplete='off' required/>
-                            <input type="text" name="text" placeholder="Text" autoComplete='off' required/>
+                            <label htmlFor="title">Title</label>
+                            <input type="text" name="title" id="title" placeholder="Your reminder title" autoComplete='off' required/>
+                            <label htmlFor="text">Text</label>
+                            <input type="text" name="text" id="text" placeholder="Enter details for reminder" autoComplete='off' required/>
+                            <label htmlFor="deadline">Deadline</label>
+                            <input type="date" name="deadline" id="deadline" required/>
                             <button type="submit">Add Reminder</button>
                         </form>
                     </div>
@@ -80,9 +85,25 @@ class Form extends Component{
                     <div className='reminderUpdateFormContainer'>
                         <Backdrop show cancelForm={this.props.cancelForm}/>
                         <form onSubmit={this.formSubmitHandler}>
-                            <input onChange={this.changeHandler} name='title' type='text' value={this.state.currentReminder.title} autoComplete='off' required/>
-                            <input onChange={this.changeHandler} name='text' type='text' value={this.state.currentReminder.text} autoComplete='off' required/>
+                            <label htmlFor="title">Title</label>
+                            <input onChange={this.changeHandler} name='title' id='title' type='text' value={this.state.currentReminder.title} autoComplete='off' required/>
+                            <label htmlFor="text">Text</label>
+                            <input onChange={this.changeHandler} name='text' id='text' type='text' value={this.state.currentReminder.text} autoComplete='off' required/>
+                            <label htmlFor="deadline">Deadline</label>
+                            <input onChange={this.changeHandler} type="date" name="deadline" id="deadline" value={this.state.currentReminder.deadline}required/>
                             <button type="submit">Update Reminder</button>
+                        </form>
+                    </div>
+                )
+            case('filterReminders'):
+                return(
+                    <div className="reminderFilterContainer">
+                        <form onSubmit={this.props.filterReminder}>
+                            <label htmlFor="deadline">Show reminders with deadline before</label>
+                            <div>
+                                <input type="date" name="deadline" required/>
+                                <button type="submit">Filter</button>
+                            </div>
                         </form>
                     </div>
                 )

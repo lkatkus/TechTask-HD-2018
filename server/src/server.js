@@ -91,12 +91,12 @@
             creator: req.params.userId,
             title: req.body.title,
             text: req.body.text,
+            deadline: req.body.deadline,
             createdAt: new Date().getTime()
         });
 
         newReminder.save()
         .then((addedReminder) => {
-            // sendMail(addedReminder);
             return Reminder.find({
                 creator: req.params.userId
             })
@@ -123,7 +123,7 @@
             };
             if(req.query.to){
                 reminders = reminders.filter((reminder) => {
-                    return reminder.createdAt <= req.query.to;
+                    return reminder.deadline <= req.query.to;
                 });
             };
             res.status(200).send(reminders);
@@ -183,7 +183,22 @@
 
     // Send email
     app.post('/user/:userId/reminder/:reminderId/send', authenticate, (req, res) => {
-        res.send('send reminder email');
+                
+        Reminder.findOne({
+            _id: req.params.reminderId,
+            creator: req.params.userId           
+        })
+        .then((reminder) => {
+            if(reminder){
+                sendMail(reminder);
+                res.status(200).send();
+            }else{
+                throw new Error('Unable to send reminder.');
+            }
+        })
+        .catch((err) => {
+            res.status(400).send(err.message);
+        }) 
     });
 // --------- END ROUTING ---------
 

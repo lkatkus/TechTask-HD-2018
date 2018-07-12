@@ -10,6 +10,9 @@ const Reminder = mongoose.model('Reminder', {
     text: {
         type: String
     },
+    deadline: {
+        type: String
+    },
     createdAt: {
         type: Number
     }
